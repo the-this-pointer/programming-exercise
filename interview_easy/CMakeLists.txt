@@ -5,5 +5,5 @@ FILE (GLOB_RECURSE srcs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOU
 
 FOREACH (T_FILE ${srcs})
     get_filename_component (T_NAME ${T_FILE} NAME_WE)
-    add_executable (Interview_${T_NAME} ${T_FILE})
+    add_executable (Interview_Easy_${T_NAME} ${T_FILE})
 ENDFOREACH (T_FILE ${srcs})
