@@ -5,20 +5,20 @@
 #include <utility>
 
 template <typename T>
-class Node {
+class BstNode {
 public:
-  explicit Node(T&& val):
+  explicit BstNode(T&& val):
       value(std::forward<T>(val)), left(nullptr), right(nullptr)
   {}
 
-  ~Node() {
+  virtual ~BstNode() {
     delete left;
     delete right;
   }
 
   T value;
-  Node<T>* left;
-  Node<T>* right;
+  BstNode<T>* left;
+  BstNode<T>* right;
 };
 
 template <
@@ -27,7 +27,7 @@ template <
 >
 class BST {
 public:
-  using value_type = V;
+  using value_type [[maybe_unused]] = V;
   using node_type = N<V>;
 
   BST() {
@@ -41,21 +41,21 @@ public:
   template<typename U>
   void insert(U&& value)
   {
-    insert(&root, std::forward<U>(value));
+    root = bst_insert(root, std::forward<U>(value));
   }
 
   template<typename U>
   [[maybe_unused]]
   bool search(U&& value)
   {
-    return search(root, std::forward<U>(value));
+    return bst_search(root, std::forward<U>(value));
   }
 
   template<typename U>
   [[maybe_unused]]
   void delete_(U&& value)
   {
-    root = delete_(root, std::forward<U>(value));
+    root = bst_delete(root, std::forward<U>(value));
   }
 
   void print_inorder() {
@@ -63,35 +63,23 @@ public:
     std::cout << std::endl;
   }
 
-private:
+protected:
   template<typename U>
-  void insert(node_type** node, U&& value)
+  node_type* bst_insert(node_type* node, U&& value)
   {
-    if (*node == nullptr)
-    {
-      *node = new Node<value_type>(std::forward<U>(value));
-      return;
-    }
+    if (node == nullptr)
+      return new node_type(std::forward<U>(value));
 
-    if (value < (*node)->value)
-    {
-      if (!(*node)->left)
-        (*node)->left = new Node<value_type>(std::forward<U>(value));
-      else
-        insert(&((*node)->left), std::forward<U>(value));
-    }
+    if (value < node->value)
+      node->left = bst_insert(node->left, std::forward<U>(value));
+    else if (value > node->value)
+      node->right = bst_insert(node->right, std::forward<U>(value));
 
-    if (value > (*node)->value)
-    {
-      if (!(*node)->right)
-        (*node)->right = new Node<value_type>(std::forward<U>(value));
-      else
-        insert(&((*node)->right), std::forward<U>(value));
-    }
+    return node;
   }
 
   template<typename U>
-  bool search(node_type* node, U&& value)
+  bool bst_search(node_type* node, U&& value)
   {
     if (!node)
       return false;
@@ -108,14 +96,14 @@ private:
   }
 
   template<typename U>
-  node_type* delete_(node_type* node, U&& value) {
+  node_type* bst_delete(node_type* node, U&& value) {
     if (!node)
       return nullptr;
 
     if (value < node->value)
-      node->left = delete_(node->left, std::forward<U>(value));
+      node->left = bst_delete(node->left, std::forward<U>(value));
     else if (value > node->value)
-      node->right = delete_(node->right, std::forward<U>(value));
+      node->right = bst_delete(node->right, std::forward<U>(value));
     else
     {
       // if the node is a leaf we simply delete it.

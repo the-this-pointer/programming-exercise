@@ -2,7 +2,7 @@
 #include "bst.hpp"
 
 int main() {
-  BST<Node, int> b{};
+  BST<BstNode, int> b{};
   b.insert(10);
   b.insert(2);
   b.insert(5);
