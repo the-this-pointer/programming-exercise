@@ -128,14 +128,14 @@ protected:
       }
 
       // find the inorder successor (smallest in the right subtree)
-      node_type* min = minimum(node->right);
+      node_type* min = successor(node->right);
       node->value = std::forward<U>(min->value);
       node->right = delete_(node->right, min->value);
     }
     return node;
   }
 
-  node_type* minimum(node_type* node)
+  node_type* successor(node_type* node)
   {
     while(node->left)
       node = node->left;
