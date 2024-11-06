@@ -42,6 +42,7 @@ public:
   void insert(U&& value)
   {
     this->root = avl_insert(this->root, std::forward<U>(value));
+//    this->root->height = std::max(height(this->root->left), height(this->root->right)) + 1;
   }
 
   template<typename U>
@@ -56,6 +57,11 @@ public:
   void delete_(U&& value)
   {
     this->root = avl_delete(this->root, std::forward<U>(value));
+  }
+
+  void print_inorder() {
+    BST<N,V>::print_inorder();
+    std::cout << std::endl;
   }
 
   void print_preorder() {
@@ -90,13 +96,13 @@ private:
       return rotateLeft(node);
 
     // Left Right Case
-    if (b > 1 && value > node->right->value) {
+    if (b > 1 && value > node->left->value) {
       node->left = rotateLeft(node->left);
       return rotateRight(node);
     }
 
     // Right Left Case
-    if (b < -1 && value < node->left->value) {
+    if (b < -1 && value < node->right->value) {
       node->right = rotateRight(node->right);
       return rotateLeft(node);
     }
@@ -163,27 +169,27 @@ private:
       // if the node is a leaf we simply delete it.
       if (!node->left && !node->right)
       {
-        detachNode(node);
+        this->detachNode(node);
         delete node;
         return nullptr;
       }
       else if (!node->left) {
         node_type* tmp = node->right;
-        detachNode(node);
+        this->detachNode(node);
         delete node;
         node = tmp;
       }
       else if (!node->right) {
         node_type* tmp = node->left;
-        detachNode(node);
+        this->detachNode(node);
         delete node;
         node = tmp;
       }
       else {
         // find the inorder successor (smallest in the right subtree)
-        node_type *min = minimum(node->right);
+        node_type *min = this->successor(node->right);
         node->value = std::forward<U>(min->value);
-        node->right = delete_(node->right, min->value);
+        node->right = avl_delete(node->right, min->value);
       }
     }
 

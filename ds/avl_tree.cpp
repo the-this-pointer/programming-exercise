@@ -9,14 +9,13 @@ int main() {
   b.insert(50);
   b.insert(25);
 
-  b.print_preorder();
+  b.print_inorder();
 //  std::cout << std::boolalpha;
 //  std::cout << "find17 " << b.search(17) << std::endl;
 //  std::cout << "find18 " << b.search(18) << std::endl;
 
-//  b.delete_(10);
-//  b.delete_(2);
-//  b.print_inorder();
+  b.delete_(25);
+  b.print_inorder();
 
   getchar();
   return 0;

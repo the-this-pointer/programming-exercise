@@ -58,7 +58,7 @@ public:
     root = bst_delete(root, std::forward<U>(value));
   }
 
-  void print_inorder() {
+  virtual void print_inorder() {
     print_inorder(root);
     std::cout << std::endl;
   }
