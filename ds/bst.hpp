@@ -88,9 +88,9 @@ protected:
       return true;
 
     if (value < node->value)
-      return search(node->left, std::forward<U>(value));
+      return bst_search(node->left, std::forward<U>(value));
     else if (value > node->value)
-      return search(node->right, std::forward<U>(value));
+      return bst_search(node->right, std::forward<U>(value));
 
     return false;
   }
@@ -130,7 +130,7 @@ protected:
       // find the inorder successor (smallest in the right subtree)
       node_type* min = successor(node->right);
       node->value = std::forward<U>(min->value);
-      node->right = delete_(node->right, min->value);
+      node->right = bst_delete(node->right, min->value);
     }
     return node;
   }
